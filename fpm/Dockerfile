@@ -65,6 +65,12 @@ RUN curl -o mautic.zip -SL https://github.com/mautic/mautic/releases/download/${
     && rm mautic.zip \
     && chown -R www-data:www-data /usr/src/mautic
 
+# Apply patch for Postal
+RUN curl -o postal.patch -SL https://patch-diff.githubusercontent.com/raw/mautic/mautic/pull/9754.patch \
+    && cat postal.patch | patch -p 1 -N -d /usr/src/mautic || true \
+    && rm postal.patch \
+    && chown -Rhc www-data:www-data /usr/src/mautic
+
 # Copy init scripts and custom .htaccess
 COPY common/docker-entrypoint.sh /entrypoint.sh
 COPY common/makeconfig.php /makeconfig.php
