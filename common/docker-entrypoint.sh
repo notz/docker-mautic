@@ -107,7 +107,7 @@ echo >&2 "The following information will be prefilled into the installer (keep p
 echo >&2 "Host Name: $MAUTIC_DB_HOST"
 echo >&2 "Database Name: $MAUTIC_DB_NAME"
 echo >&2 "Database Username: $MAUTIC_DB_USER"
-echo >&2 "Database Password: $MAUTIC_DB_PASSWORD"
+echo >&2 "Database Password: (hidden)"
 echo >&2 "========================================================================"
 echo >&2
 echo >&2
