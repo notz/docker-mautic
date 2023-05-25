@@ -88,19 +88,19 @@ ENV PHP_INI_DATE_TIMEZONE='UTC' \
     PHP_MAX_UPLOAD=512M \
     PHP_MAX_EXECUTION_TIME=300
 
-# Download package and extract to web volume
+# Download package and extract to web volume and apply patches for Postal & mysql
 RUN curl -o mautic.zip -SL https://github.com/mautic/mautic/releases/download/${MAUTIC_VERSION}/${MAUTIC_VERSION}.zip \
     && echo "$MAUTIC_SHA1 *mautic.zip" | sha1sum -c - \
     && mkdir /usr/src/mautic \
     && unzip mautic.zip -d /usr/src/mautic \
     && rm mautic.zip \
+    && curl -o postal.patch -SL https://patch-diff.githubusercontent.com/raw/mautic/mautic/pull/9754.patch \
+    && cat postal.patch | patch -p 1 -N -d /usr/src/mautic || true \
+    && rm postal.patch \
+    && curl -o mysql-ssl.patch -SL https://patch-diff.githubusercontent.com/raw/notz/mautic/pull/1.patch \
+    && cat mysql-ssl.patch | patch -p 1 -N -d /usr/src/mautic \
+    && rm mysql-ssl.patch \
     && chown -R www-data:www-data /usr/src/mautic
-
- # Apply patch for Postal
- RUN curl -o postal.patch -SL https://patch-diff.githubusercontent.com/raw/mautic/mautic/pull/9754.patch \
-     && cat postal.patch | patch -p 1 -N -d /usr/src/mautic || true \
-     && rm postal.patch \
-     && chown -Rhc www-data:www-data /usr/src/mautic
 
 # Copy init scripts and custom .htaccess
 COPY common/docker-entrypoint.sh /entrypoint.sh
