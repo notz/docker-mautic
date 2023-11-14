@@ -100,6 +100,9 @@ RUN curl -o mautic.zip -SL https://github.com/mautic/mautic/releases/download/${
     && curl -o mysql-ssl.patch -SL https://patch-diff.githubusercontent.com/raw/notz/mautic/pull/1.patch \
     && cat mysql-ssl.patch | patch -p 1 -N -d /usr/src/mautic \
     && rm mysql-ssl.patch \
+    && curl -o fix-ansi-sql.patch -SL https://patch-diff.githubusercontent.com/raw/mautic/mautic/pull/12892.patch \
+    && cat fix-ansi-sql.patch | patch -p 1 -N -d /usr/src/mautic \
+    && rm fix-ansi-sql.patch \
     && chown -R www-data:www-data /usr/src/mautic
 
 # Copy init scripts and custom .htaccess
